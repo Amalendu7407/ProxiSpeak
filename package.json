@@ -1,0 +1,23 @@
+{
+  "name": "proxispeak",
+  "version": "1.0.0",
+  "description": "Backend of ProxiSpeak",
+  "homepage": "https://github.com/Hydra-Ramesh/ProxiSpeak#readme",
+  "bugs": {
+    "url": "https://github.com/Hydra-Ramesh/ProxiSpeak/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Hydra-Ramesh/ProxiSpeak.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.3.0"
+  }
+}
