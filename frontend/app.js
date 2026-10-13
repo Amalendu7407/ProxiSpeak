@@ -26,10 +26,22 @@ function update() {
 }
 
 function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
   ctx.strokeStyle = "rgba(0, 255, 0, 0.3)";
-ctx.beginPath();
-ctx.arc(player.x, player.y, 50, 0, Math.PI * 2);
-ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, 120, 0, Math.PI * 2);
+  ctx.stroke();
+
+  ctx.fillStyle = "lime";
+  ctx.beginPath();
+  ctx.arc(player.x, player.y, player.r, 0, Math.PI * 2);
+  ctx.fill();
+
+  ctx.fillStyle = "white";
+  ctx.textAlign = "center";
+  ctx.fillText(username, player.x, player.y - 22);
+
 }
 
 function loop() {
