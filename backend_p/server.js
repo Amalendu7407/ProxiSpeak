@@ -1,3 +1,5 @@
+
+
 import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
@@ -5,21 +7,22 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 
 const app = express();
-app.use(cors()); // फ्रंटएंड और बैकएंड को बिना एरर जोड़ने के लिए
+app.use(cors()); // Allows frontend and backend to connect without errors
 
 const httpServer = createServer(app);
 const io = new Server(httpServer, {
-  cors: { origin: "*" } // सुरक्षा सेटिंग्स
+  cors: { origin: "*" } // Security settings allowing all connections
 });
 
-// जब भी कोई यूजर वेबसाइट खोलेगा, यह सॉकेट कनेक्शन चालू होगा
+// Triggers whenever a new user opens the website
 io.on('connection', (socket) => {
-  console.log(`🔌 एक नया यूजर जुड़ गया! उसकी सॉकेट आईडी है: ${socket.id}`);
+  console.log(`🔌 New user connected! Socket ID: ${socket.id}`);
 
-  // जब फ्रंटएंड से यूजर ज्वाइन करेगा
+  // Triggers when a user logs in from the frontend
   socket.on('join-space', (data) => {
-    console.log(`${data.username} ने ऑफिस ज्वाइन किया!`);
-    // बाकी सब को बताओ कि नया यूजर आया है
+    console.log(`${data.username} joined the office space!`);
+    
+    // Broadcast to everyone else that a new user has joined
     socket.broadcast.emit('user-joined', {
       socketId: socket.id,
       username: data.username,
@@ -28,23 +31,18 @@ io.on('connection', (socket) => {
     });
   });
 
-  // जब कोई यूजर वेबसाइट बंद करेगा
+  // Triggers when a user closes the website tab
   socket.on('disconnect', () => {
-    console.log(`❌ यूजर चला गया: ${socket.id}`);
+    console.log(`❌ User disconnected: ${socket.id}`);
     io.emit('user-left', socket.id);
   });
 });
 
-// सर्वर को पोर्ट 5000 पर चालू करना
+// Start the server on port 5000
 const PORT = 5000;
 httpServer.listen(PORT, () => {
-  console.log(`🚀 सदस्य A का सर्ver चालू है: http://localhost:${PORT}`);
+  console.log(`🚀 Member A server is running on: http://localhost:${PORT}`);
 });
-
-
-
-
-
 
 
 
