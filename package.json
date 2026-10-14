@@ -19,6 +19,9 @@
   },
   "homepage": "https://github.com/Amalendu7407/ProxiSpeak#readme",
   "dependencies": {
-    "mongoose": "^9.11.2"
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "mongoose": "^9.11.2",
+    "socket.io": "^4.8.4"
   }
 }
