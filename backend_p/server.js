@@ -27,7 +27,9 @@ io.on('connection', (socket) => {
       y: data.y
     });
   });
-
+socket.on('move', (data) => {
+    socket.broadcast.emit('move', { id: socket.id, ...data });
+  });
   // जब कोई यूजर वेबसाइट बंद करेगा
   socket.on('disconnect', () => {
     console.log(`❌ यूजर चला गया: ${socket.id}`);
