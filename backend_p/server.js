@@ -41,6 +41,19 @@ socket.on('move', async (data) => {
 
   // Member B's database ($near) code will go here later
 });
+       // WebRTC के सिग्नल्स को आगे बढ़ाना
+  socket.on('webrtc-offer', (data) => {
+    io.to(data.targetSocketId).emit('webrtc-offer', { senderSocketId: socket.id, offer: data.offer });
+  });
+
+  socket.on('webrtc-answer', (data) => {
+    io.to(data.targetSocketId).emit('webrtc-answer', { senderSocketId: socket.id, answer: data.answer });
+  });
+
+  socket.on('ice-candidate', (data) => {
+    io.to(data.targetSocketId).emit('ice-candidate', { senderSocketId: socket.id, candidate: data.candidate });
+  });
+  
 
   // Triggers when a user closes the website tab
   socket.on('disconnect', () => {
