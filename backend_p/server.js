@@ -5,6 +5,9 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import { createClient } from 'redis';
+import { createAdapter } from '@socket.io/redis-adapter';
+
 
 const app = express();
 app.use(cors()); // Allows frontend and backend to connect without errors
