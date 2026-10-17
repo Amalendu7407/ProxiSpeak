@@ -17,10 +17,22 @@ const io = new Server(httpServer, {
   cors: { origin: "*" } // Security settings allowing all connections
 });
 
+// --- WEEK 3: REDIS ENTERPRISE SCALING ADAPTER PLACEMENT ---
+// We initialize Redis client connections here before establishing active web socket connections
+const pubClient = createClient({ url: 'redis://localhost:6379' });
+const subClient = pubClient.duplicate();
+
+// We keep these commented out until you install Redis server application software locally
+// io.adapter(createAdapter(pubClient, subClient));
+
+
+// --- LIVE WEBSOCKET CONTROL ROOM ---
+
 // Triggers whenever a new user opens the website
 io.on('connection', (socket) => {
   console.log(`🔌 New user connected! Socket ID: ${socket.id}`);
 
+  
   // Triggers when a user logs in from the frontend
   socket.on('join-space', (data) => {
     console.log(`${data.username} joined the office space!`);
