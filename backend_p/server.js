@@ -76,6 +76,22 @@ socket.on('move', async (data) => {
     io.emit('user-left', socket.id);
   });
 });
+// API endpoint to save the virtual office layout configurations
+app.post('/api/layout', async (req, res) => {
+  try {
+    // Member B will add the MongoDB saving operations for walls and obstacles here
+    res.status(200).send({ message: "Office layout saved successfully!" });
+  } catch (error) {
+    res.status(500).send({ error: "Failed to save the office layout." });
+  }
+});
+
+// API endpoint to fetch the saved office layout back to the frontend map view
+app.get('/api/layout', async (req, res) => {
+  // Database retrieval logic for walls and structural items goes here
+  res.status(200).send({ obstacles: [] });
+});
+
 
 // Start the server on port 5000
 const PORT = 5000;
