@@ -1,11 +1,13 @@
 const socket = io("http://localhost:5000");
 const others = {};
-socket.on("move", (data) => { others[data.id] = data; });
-socket.on("users-update", (users) => {
-  Object.keys(others).forEach((id) => delete others[id]);
-  users.forEach((u) => {
-    if (u.id !== socket.id) others[u.id] = u;
-  });
+socket.on("user-joined", (u) => {
+  others[u.socketId] = { id: u.socketId, x: u.x, y: u.y, name: u.username };
+});
+
+socket.on("user-moved", (u) => {
+  if (!others[u.socketId]) others[u.socketId] = { id: u.socketId, name: "User" };
+  others[u.socketId].x = u.x;
+  others[u.socketId].y = u.y;
 });
 socket.on("user-left", (id) => delete others[id]);
 const canvas = document.getElementById("game");
@@ -20,6 +22,7 @@ document.getElementById("join").onclick = () => {
   username = document.getElementById("username").value || "Guest";
   document.getElementById("login").style.display = "none";
   canvas.style.display = "block";
+  socket.emit("join-space", { username, x: player.x, y: player.y });
   loop();
 };
 
@@ -53,7 +56,8 @@ function draw() {
   ctx.textAlign = "center";
   ctx.fillText(username, player.x, player.y - 22);
 for (const id in others) {
-  ctx.fillStyle = "dodgerblue";
+  const dist = Math.hypot(others[id].x - player.x, others[id].y - player.y);
+  ctx.fillStyle = dist <= 100 ? "limegreen" : "dodgerblue";
   ctx.beginPath();
   ctx.arc(others[id].x, others[id].y, player.r, 0, Math.PI * 2);
   ctx.fill();
