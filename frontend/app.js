@@ -38,7 +38,12 @@ function update() {
   player.y = Math.max(player.r, Math.min(canvas.height - player.r, player.y));
   socket.emit("move", { x: player.x, y: player.y, name: username }); 
 }
-
+function getNearbyUsers() {
+  return Object.keys(others).filter(id =>
+    others[id].x !== undefined &&
+    Math.hypot(others[id].x - player.x, others[id].y - player.y) <= 100
+  );
+}
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
