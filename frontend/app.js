@@ -5,9 +5,10 @@ socket.on("user-joined", (u) => {
 });
 
 socket.on("user-moved", (u) => {
-  if (!others[u.socketId]) others[u.socketId] = { id: u.socketId, name: "User" };
+  if (!others[u.socketId]) others[u.socketId] = { id: u.socketId, name: u.name || "User" };
   others[u.socketId].x = u.x;
   others[u.socketId].y = u.y;
+  if (u.name) others[u.socketId].name = u.name;
 });
 socket.on("user-left", (id) => delete others[id]);
 const canvas = document.getElementById("game");
