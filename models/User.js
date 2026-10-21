@@ -15,7 +15,10 @@ const userSchema = new mongoose.Schema({
     }
 });
 
-// Create a 2D index for geospatial queries
-userSchema.index({ location: '2d' });
+// Create a 2D index for canvas pixel coordinates
+userSchema.index(
+    { location: '2d' },
+    { min: 0, max: 800 }
+);
 
 module.exports = mongoose.model('User', userSchema);
