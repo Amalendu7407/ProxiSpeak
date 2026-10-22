@@ -1,13 +1,14 @@
+
 const socket = io("http://localhost:5000");
 const others = {};
 socket.on("user-joined", (u) => {
-  others[u.socketId] = { id: u.socketId, x: u.x, y: u.y, name: u.username };
+ others[u.socketId] = { id: u.socketId, x: u.x, y: u.y, tx: u.x, ty: u.y, name: u.username };
 });
 
 socket.on("user-moved", (u) => {
-  if (!others[u.socketId]) others[u.socketId] = { id: u.socketId, name: u.name || "User" };
-  others[u.socketId].x = u.x;
-  others[u.socketId].y = u.y;
+ if (!others[u.socketId]) others[u.socketId] = { id: u.socketId, x: u.x, y: u.y, tx: u.x, ty: u.y, name: u.name || "User" };
+  others[u.socketId].tx = u.x;
+  others[u.socketId].ty = u.y;
   if (u.name) others[u.socketId].name = u.name;
 });
 socket.on("user-left", (id) => delete others[id]);
@@ -30,6 +31,7 @@ document.getElementById("join").onclick = () => {
 window.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
 window.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
 
+let lastEmit = 0;
 function update() {
   if (keys["w"] || keys["arrowup"]) player.y -= player.speed;
   if (keys["s"] || keys["arrowdown"]) player.y += player.speed;
@@ -37,7 +39,17 @@ function update() {
   if (keys["d"] || keys["arrowright"]) player.x += player.speed;
   player.x = Math.max(player.r, Math.min(canvas.width - player.r, player.x));
   player.y = Math.max(player.r, Math.min(canvas.height - player.r, player.y));
-  socket.emit("move", { x: player.x, y: player.y, name: username }); 
+  const now = performance.now();
+if (now - lastEmit > 40) {
+  socket.emit("move", { x: player.x, y: player.y, name: username });
+  lastEmit = now;
+}
+for (const id in others) {
+  const o = others[id];
+  if (o.tx === undefined) continue;
+  o.x += (o.tx - o.x) * 0.2;
+  o.y += (o.ty - o.y) * 0.2;
+}
 }
 function getNearbyUsers() {
   return Object.keys(others).filter(id =>
