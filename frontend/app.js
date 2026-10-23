@@ -19,7 +19,20 @@ canvas.style.display = "none";
 let username = "";
 const player = { x: 400, y: 300, r: 15, speed: 5 };
 const keys = {};
+const obstacles = [
+  { x: 200, y: 100, w: 20,  h: 200, type: "wall" },
+  { x: 500, y: 200, w: 200, h: 20,  type: "wall" },
+  { x: 600, y: 400, w: 100, h: 50,  type: "sofa" },
+  { x: 100, y: 450, w: 120, h: 60,  type: "desk" },
+];
 
+function hitsObstacle(x, y) {
+  return obstacles.some(o => {
+    const cx = Math.max(o.x, Math.min(x, o.x + o.w));
+    const cy = Math.max(o.y, Math.min(y, o.y + o.h));
+    return Math.hypot(x - cx, y - cy) < player.r;
+  });
+}
 document.getElementById("join").onclick = () => {
   username = document.getElementById("username").value || "Guest";
   document.getElementById("login").style.display = "none";
@@ -33,12 +46,14 @@ window.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
 
 let lastEmit = 0;
 function update() {
+  const oldX = player.x, oldY = player.y;
   if (keys["w"] || keys["arrowup"]) player.y -= player.speed;
   if (keys["s"] || keys["arrowdown"]) player.y += player.speed;
   if (keys["a"] || keys["arrowleft"]) player.x -= player.speed;
   if (keys["d"] || keys["arrowright"]) player.x += player.speed;
   player.x = Math.max(player.r, Math.min(canvas.width - player.r, player.x));
   player.y = Math.max(player.r, Math.min(canvas.height - player.r, player.y));
+  if (hitsObstacle(player.x, player.y)) { player.x = oldX; player.y = oldY; }
   const now = performance.now();
 if (now - lastEmit > 40) {
   socket.emit("move", { x: player.x, y: player.y, name: username });
@@ -59,11 +74,23 @@ function getNearbyUsers() {
 }
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+obstacles.forEach(o => {
+  ctx.fillStyle = o.type === "wall" ? "#555" : "#a97c50";
+  ctx.fillRect(o.x, o.y, o.w, o.h);
+});
+ const g = ctx.createRadialGradient(player.x, player.y, 0, player.x, player.y, 100);
+g.addColorStop(0, "rgba(0,255,0,0.03)");
+g.addColorStop(1, "rgba(0,255,0,0.22)");
+ctx.fillStyle = g;
+ctx.beginPath();
+ctx.arc(player.x, player.y, 100, 0, Math.PI * 2);
+ctx.fill();
 
-  ctx.strokeStyle = "rgba(0, 255, 0, 0.3)";
-  ctx.beginPath();
-  ctx.arc(player.x, player.y, 100, 0, Math.PI * 2);
-  ctx.stroke();
+ctx.shadowColor = "lime";
+ctx.shadowBlur = 15;
+ctx.strokeStyle = "rgba(0,255,0,0.6)";
+ctx.stroke();
+ctx.shadowBlur = 0; // ye zaroori hai, warna sab glow karega
 
   ctx.fillStyle = "lime";
   ctx.beginPath();
