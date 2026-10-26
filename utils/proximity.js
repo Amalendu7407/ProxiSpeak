@@ -9,7 +9,7 @@ async function getNearbyUsers(x, y, currentSocketId, radius = 100) {
         x < 0 ||
         x > 800 ||
         y < 0 ||
-        y > 800 ||
+        y > 600 ||
         typeof currentSocketId !== 'string' ||
         currentSocketId.length === 0
     ) {
