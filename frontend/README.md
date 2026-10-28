@@ -35,4 +35,5 @@ HTML5 Canvas, JavaScript, Socket.io client
 - `user-left`: a user has disconnected
 
 ## Screenshots
-Coming soon
+## Running Tests
+Run `npm test` inside the frontend folder to run the unit tests in utils.test.js.
