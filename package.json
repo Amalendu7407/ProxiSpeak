@@ -1,0 +1,35 @@
+{
+  "name": "proxispeak",
+  "version": "1.0.0",
+  "description": "ProxiSpeak - Real-time virtual office with spatial audio and proximity voice chat",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"blue,green\" \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "dev:server": "npm --prefix server run dev",
+    "dev:client": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "start": "npm --prefix server start",
+    "test": "npm --prefix server test",
+    "test:perf": "npm --prefix server run test:perf",
+    "install:all": "npm install && npm --prefix server install && npm --prefix client install"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "keywords": [
+    "virtual-office",
+    "spatial-audio",
+    "webrtc",
+    "socketio",
+    "canvas",
+    "react",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC"
+}
