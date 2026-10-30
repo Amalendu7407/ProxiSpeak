@@ -35,4 +35,12 @@ HTML5 Canvas, JavaScript, Socket.io client
 - `user-left`: a user has disconnected
 
 ## Screenshots
-Coming soon
+![Login screen](screenshots/login.png)
+
+![Office map with hearing zone](screenshots/office.png)
+
+Two users inside each other's 100px hearing zone are highlighted on the map.
+
+## Running Tests
+
+Run `npm test` inside the frontend folder to run the unit tests in utils.test.js.
