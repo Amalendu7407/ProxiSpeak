@@ -3,12 +3,14 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import cors from 'cors';
-// import { createClient } from 'redis'; // WEEK 3: Redis (abhi use nahi ho raha)
- 
 import connectDB from './db.js';
 import { User } from './models/User.js';
  
+//new
 const app = express();
+app.get('/', (req,res) => {
+  res.send('Proxispeak backend is running successfully');
+});
 app.use(cors());
  
 const httpServer = createServer(app);
@@ -86,7 +88,7 @@ io.on('connection', (socket) => {
         y: u.location[1]
       })));
  
-      // Needs a '2d' index on `location` (see models/User.js)
+      /* Needs a '2d' index on `location` (see models/User.js)
       const nearbyUsers = await User.find({
         location: {
           $near: [x, y],
@@ -100,7 +102,38 @@ io.on('connection', (socket) => {
     } catch (error) {
       console.error('Failed to update live user vectors:', error.message);
     }
+  });*/
+  
+      // Needs a '2d' index on `location` (see models/User.js)  //new
+
+      console.log('Move received:', socket.id, x, y);
+
+      const nearbyUsers = await User.find({
+        location: {
+          $near: [x, y],
+          $maxDistance: 100
+        },
+        socketId: { $ne: socket.id }
+      });
+
+      console.log(
+        'Nearby users found:',
+        nearbyUsers.map(u => u.socketId)
+      );
+
+      socket.emit(
+        'proximity-update',
+        nearbyUsers.map(u => u.socketId)
+      );
+
+    } catch (error) {
+      console.error(
+        'Failed to update live user vectors:',
+        error.message
+      );
+    }
   });
+
  
   // WebRTC signal forwarding
   socket.on('webrtc-offer', (data = {}) => {
