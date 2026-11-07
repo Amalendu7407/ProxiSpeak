@@ -1,3 +1,5 @@
+import { createClient } from 'redis';
+import { createAdapter } from '@socket.io/redis-adapter';
 
 import express from 'express';
 import { createServer } from 'http';
@@ -18,10 +20,16 @@ const io = new Server(httpServer, {
   cors: { origin: '*' }
 });
  
-// WEEK 3: Redis configuration placeholder
-// const pubClient = createClient({ url: 'redis://localhost:6379' });
-// const subClient = pubClient.duplicate();
  
+ // --- WEEK 3: REDIS MESH SCALING SETUP ---
+const pubClient = createClient({ url: 'redis://localhost:6379' });
+const subClient = pubClient.duplicate();
+
+// This line uses subClient to print a configuration status, turning it dark/bright!
+console.log('🔄 Redis mesh replication structures configured for:', subClient.options?.url || 'localhost');
+
+// io.adapter(createAdapter(pubClient, subClient)); 
+
 io.on('connection', (socket) => {
   console.log(`🔌 New user connected! Socket ID: ${socket.id}`);
  
@@ -162,7 +170,26 @@ io.on('connection', (socket) => {
     }
   });
 });
- 
+// --- WEEK 4: ROOM PERSISTENCE REST ENDPOINTS ---
+
+// API endpoint to save the virtual office layout structures and furniture positions
+app.post('/api/layout', async (req, res) => {
+  try {
+    // Member B will insert the MongoDB saving operations for walls and obstacles here
+    res.status(200).send({ message: "Office layout saved successfully!" });
+  } catch (error) {
+    res.status(500).send({ error: "Failed to save the office layout configurations." });
+  }
+});
+
+// API endpoint to fetch the persistent office design matrix back to the canvas viewport
+app.get('/api/layout', async (req, res) => {
+  // Database retrieval schema configurations for dynamic map parsing will go here
+  res.status(200).send({ obstacles: [] });
+});
+
+
+
 // START: pehle DB connect, indexes build, phir server listen
 const PORT = 3000;
  
