@@ -4,7 +4,7 @@ Welcome to the official backend application layer repository for **ProxiSpeak: A
 
 This system architecture functions as a low-latency, high-concurrency real-time signaling engine and location-tracking workspace module. It tracks active team members dynamically and orchestrates WebRTC voice paths using geographical distances.
 
----
+
 
 ## Technical Architecture & Stack
 - **Runtime Framework:** Node.js (ECMAScript Modules Enabled)
@@ -14,7 +14,6 @@ This system architecture functions as a low-latency, high-concurrency real-time 
 - **Scalability Middleware:** Redis Pub/Sub Adapter (Configured for future mesh deployment clusters)
 - **Automated Testing Engine:** Mocha & Chai Frameworks
 
----
 
 ## Backend Directory Tree Structure
 ```text
@@ -50,7 +49,6 @@ Console verification output:
  MongoDB database connected successfully via db.js!  
  ProxiSpeak server running perfectly on: http://localhost:3000
 
----
 
 ##  Live Socket.IO Network Event Schema
 
@@ -75,8 +73,6 @@ Console verification output:
 - *user-left*  
   Payload Format: socket.id (String)  
   Action: Signals remaining workspace remotes to immediately drop the matching avatar on disconnect.
-
----
 
 ## Automated Unit Testing Specification
 To satisfy system reliability metrics and run the integration verification test suites, execute the command below while your primary server is running:
