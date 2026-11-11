@@ -181,7 +181,7 @@ app.post('/api/layout', async (req, res) => {
     res.status(500).send({ error: "Failed to save the office layout configurations." });
   }
 });
-
+ 
 // API endpoint to fetch the persistent office design matrix back to the canvas viewport
 app.get('/api/layout', async (req, res) => {
   // Database retrieval schema configurations for dynamic map parsing will go here
